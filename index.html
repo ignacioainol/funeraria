@@ -580,7 +580,7 @@
 					<h3>CONTÁCTANOS</h3>
 					<p>Contact us for best deals and offer</p>
 				</div>
-				<form class="comment-form --contact">
+				<form class="comment-form --contact" id="formularioOne">
 					<div class="row">
 						<div class="col-lg-4">
 							<input type="text" placeholder="Nombre" id="name" name="nombre">
@@ -595,6 +595,7 @@
 							<textarea placeholder="Mensaje" id="message" name="mensaje"></textarea>
 							<div class="text-center">
 								<button class="site-btn" id="enviarCorreo">ENVIAR</button>
+								<p id="gifload" style="display: none"><img src="img/spinner.gif" alt=""></p>
 							</div>
 						</div>
 					</div>
@@ -690,26 +691,37 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/magnific-popup.min.js"></script>
 	<script src="js/main.js"></script>
 	<script>
-		alert("ni jons");
-	</script>
-	<script>
 		$('document').ready(function(){
 
 			$('#enviarCorreo').on('click',function(e){
 				e.preventDefault();
 				var name = $("#name").val();
 				var email = $("#email").val();
-				alert(name + " " +);
-			 //    var subject = $("#subject").val();
-			 //    var message = $("#message").val();
-			 //    var sendmail = "ok";
+				var subject = $("#subject").val();
+				var message = $("#message").val();
+				var sendmail = "ok";
+
+				$.ajax({
+					url: "php/sendmail.php",
+					method:'POST',
+					data:{
+						name:name,
+			            email:email,
+			            subject: subject,
+			            message: message,
+			            sendmail: sendmail
+					},
+					beforeSend: function(){
+			          $('#gifload').show();
+			        },
+			        success: function(response){
+			            $("#formularioOne")[0].reset();
+			            $('#gifload').hide();
+			            alert(response);
+			        }
+				});
 			});
-
-			// console.log("Ni jobs");
-			// $.ajax({
-			// 	type:'POST',
-
-			// });
+			
 		})
 	</script>
 	
