@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<title>Funeraria Conceptoe</title>
+	<title>Funeraria Concepto</title>
 	<meta charset="UTF-8">
 	<meta name="description" content="Funeraria Concepto">
 	<meta name="author" content="Cyrax Chile">
@@ -580,6 +580,7 @@
 					<h3>CONTÁCTANOS</h3>
 					<p>Contact us for best deals and offer</p>
 				</div>
+				<!-- <form class="comment-form --contact" id="formularioOne"> -->
 				<form class="comment-form --contact" id="formularioOne">
 					<div class="row">
 						<div class="col-lg-4">
@@ -594,7 +595,7 @@
 						<div class="col-lg-12">
 							<textarea placeholder="Mensaje" id="message" name="mensaje"></textarea>
 							<div class="text-center">
-								<button class="site-btn" id="enviarCorreo">ENVIAR</button>
+								<button class="site-btn" type="submit" id="enviarCorreo">ENVIAR</button>
 								<p id="gifload" style="display: none"><img src="img/spinner.gif" alt=""></p>
 							</div>
 						</div>
@@ -703,10 +704,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 				$.ajax({
 					url: "php/sendmail.php",
-					method:'POST',
+					method:'post',
 					data:{
-						name:name,
-			            email:email,
+						name: name,
+			            email: email,
 			            subject: subject,
 			            message: message,
 			            sendmail: sendmail
