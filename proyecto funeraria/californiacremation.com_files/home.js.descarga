@@ -1,0 +1,8 @@
+jQuery(function ($) {
+    $('#top-slider').slider({
+        effect: 'fade',
+        slideSpeed: 2000,
+        autoPlayDelayTime: 17000
+    });
+    $('#obituaries').secondSlider();
+});

@@ -1,0 +1,171 @@
+(function ($) {
+    $.fn.secondSlider = function (options) {
+        var $container = this,
+            $slidesContainer = this.find('.slider-content'),
+            $slides = $slidesContainer.find('li.slide'),
+            $sliderBullets = this.find('.slider-bullets');
+
+        var autoPlayInterval,
+            currentIndex = 3,
+            touchEnabled = false,
+            touchStartX = 0,
+            slideCount = $slides.length,
+            totalWidth = 0,
+            slideWidth = 0,
+            left = 0;
+
+        var sliderOptions = $.extend({
+            autoPlay: true,
+            autoPlayDelayTime: 5000,
+            slideSpeed: 300
+        }, options);
+
+        var $firstSlide = $slides.filter(':first'),
+            $secondSlide = $slides.filter(':nth-child(2)'),
+            $thirdSlide = $slides.filter(':nth-child(3)'),
+            $3ndLastSlide = $slides.filter(':nth-last-child(3)'),
+            $2ndLastSlide = $slides.filter(':nth-last-child(2)'),
+            $lastSlide = $slides.filter(':last');
+        $firstSlide.before($3ndLastSlide.clone(true));
+        $firstSlide.before($2ndLastSlide.clone(true));
+        $firstSlide.before($lastSlide.clone(true));
+        $lastSlide.after($thirdSlide.clone(true));
+        $lastSlide.after($secondSlide.clone(true));
+        $lastSlide.after($firstSlide.clone(true));
+
+        $slides = $slidesContainer.find('li.slide');
+
+        for (var i = 0; i < slideCount; i += 3) {
+            $sliderBullets.append('<div class="slider-bullet"></div>');
+        }
+
+        correctSlideSizeAndPosition();
+        checkCorrectBullet();
+        startAutoPlay();
+
+
+        //EVENTS//
+        $(window).resize(function () {
+            correctSlideSizeAndPosition();
+            moveTo(left);
+        });
+
+        //BULLETS
+        $sliderBullets.find('.slider-bullet').click(function () {
+            currentIndex = Math.floor((slideCount / 3) * ($(this).index() + 1)) + 2;
+            moveToSlide(currentIndex);
+            restartAutoPlay();
+        });
+
+        //MOUSE
+        $slides.mouseenter(stopAutoPlay).mouseleave(startAutoPlay);
+
+        //SWIPES
+        $slidesContainer.on('touchstart', function (event) {
+            touchEnabled = true;
+            touchStartX = event.originalEvent.changedTouches[0].screenX;
+            stopAutoPlay();
+        });
+
+        $slidesContainer.on('touchmove', function (event) {
+            if (touchEnabled) {
+                var touchMove = touchStartX - event.originalEvent.changedTouches[0].screenX;
+                moveTo(left - touchMove);
+            }
+        });
+
+        $slidesContainer.on('touchend', function (event) {
+            touchEnabled = false;
+            var touchMove = touchStartX - event.originalEvent.changedTouches[0].screenX;
+            var index = currentIndex;
+            if (touchMove > 50) {
+                index = Math.round(touchMove / slideWidth);
+                index = index > 0 ? currentIndex + index : currentIndex + 1;
+            } else if (touchMove < -50) {
+                index = Math.round(Math.abs(touchMove) / slideWidth);
+                index = index > 0 ? currentIndex - index : currentIndex - 1;
+            }
+            moveToSlide(index);
+            startAutoPlay();
+        });
+
+        //FUNCTIONS//
+        function correctSlideSizeAndPosition() {
+            slideWidth = ($container.innerWidth() / 3) - 10;
+            $slides.css('width', slideWidth + 'px').css('margin-right', 15 + 'px');
+            totalWidth = $slides.width() * (slideCount + 8);
+            left = -$slides.outerWidth(true) * currentIndex;
+            $slidesContainer.css('width', totalWidth);
+            moveTo(left);
+        }
+
+        function checkCorrectBullet() {
+            $sliderBullets.find('.slider-bullet').removeClass('active');
+            $sliderBullets.find('.slider-bullet:eq(' + Math.floor(currentIndex / 4) + ')').addClass('active');
+        }
+
+        /**
+         * Move slide by pixels
+         * @param {int} position Pixels from left side
+         */
+        function moveTo(position) {
+            $slidesContainer.stop(true, true).css('left', position + 'px');
+        }
+
+        /**
+         * Move to slide by index
+         * @param {int} index
+         */
+        function moveToSlide(index) {
+            currentIndex = index;
+            left = -$slides.outerWidth(true) * index;
+            $slidesContainer.stop(true, true).animate({
+                left: left + 'px'
+            }, sliderOptions.slideSpeed, function () {
+                if (currentIndex >= slideCount + 2) {
+                    currentIndex = Math.abs(slideCount + 2 - currentIndex) + 2;
+                    left = -$slides.outerWidth(true) * currentIndex;
+                    moveTo(left);
+                } else if (currentIndex <= 2) {
+                    currentIndex = (slideCount + 6) - (slideCount - currentIndex + 3);
+                    left = -$slides.outerWidth(true) * currentIndex;
+                    moveTo(left);
+                }
+                checkCorrectBullet()
+            });
+        }
+
+        /**
+         * Next slide
+         */
+        function moveNext() {
+            currentIndex++;
+            moveToSlide(currentIndex);
+        }
+
+        /**
+         * Start slider auto play Interval
+         */
+        function startAutoPlay() {
+            if (sliderOptions.autoPlay && !touchEnabled) {
+                autoPlayInterval = setInterval(moveNext, sliderOptions.autoPlayDelayTime);
+            }
+        }
+
+        /**
+         * Stop slider auto play Interval
+         */
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+            }
+        }
+
+        function restartAutoPlay() {
+            stopAutoPlay();
+            startAutoPlay();
+        }
+
+        return this;
+    };
+}(jQuery));

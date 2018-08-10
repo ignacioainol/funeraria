@@ -1,0 +1,42 @@
+jQuery(function ($) {
+    $('footer .our-locations .locations a.directions').click(function(e) {
+        e.preventDefault();
+        var href = $(this).attr('href');
+        $.featherlight({iframe: href, iframeWidth: '2000px', iframeMaxWidth: '100%', iframeHeight: '1000px', iframeMaxHeight: '1000px'});
+    });
+
+    $('#contact-form').submit(function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        $.post($this.attr('action'), $this.serialize(), function(data) {
+            if (data.success) {
+                $.featherlight('<div>Thank you. Your email has been sent and we will be in contact with you shortly.</div>');
+            }
+        }, 'json');
+    });
+
+    $('.schedule-appointment-form').submit(function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        $.post($this.attr('action'), $this.serialize(), function(data) {
+            if (data.success) {
+                $.featherlight('<div>Thank you. Your email has been sent and we will be in contact with you shortly.</div>');
+            }
+        }, 'json');
+    });
+
+    $(document).on('submit', '.popup-direct-cremation-form', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        $.featherlight.close();
+        $.post($this.attr('action'), $this.serialize(), function(data) {
+            if (data.success) {
+                $.featherlight('<div>Thank you. Your email has been sent and we will be in contact with you shortly.</div>');
+            }
+        }, 'json');
+    });
+
+    $('.direct-cremation-button').click(function() {
+        $.featherlight($('#popup-direct-cremation'));
+    });
+});
