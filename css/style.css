@@ -1851,6 +1851,32 @@ ol {
 	margin-bottom: 3em;
 }
 
+/* contacto footer*/
+.phoneSection{
+	margin-bottom: 2em;
+}
+
+.phoneSection .textPhone{
+	font-size: 1.3em;
+}
+
+.phoneSection .fa-phone{
+	font-size: 4em;
+}
+.sucursalSection{
+	margin-bottom: 2em;
+}
+.sucursalSection .fa-map-marker{
+	font-size: 4em;
+}
+.sucursalSection .textPhone{
+	font-size: 1.3em;
+}
+.sucursalSection .textSucursal{
+	font-size: 1em;
+}
+/* contacto footer */
+
 /* small Mobile :320px. */
 
 @media only screen and (max-width: 479px) {
