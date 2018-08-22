@@ -1766,7 +1766,8 @@ ol {
 
 @media only screen and (max-width: 767px) {
 	.header-info {
-		display: none;
+		/*display: none;*/
+		text-align: center;
 	}
 	.site-logo {
 		padding: 15px 0;
